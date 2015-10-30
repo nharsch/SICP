@@ -1,0 +1,1 @@
+gsc -exe test.scm
