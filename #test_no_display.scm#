@@ -1,4 +1,0 @@
-
-define ans (+ 1 2 3))
-(:q:q1
- ans 2)
