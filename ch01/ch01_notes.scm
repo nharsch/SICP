@@ -64,5 +64,79 @@
   (not (< x y)))
 ; (ds (>= 5 5))
 
+;1.1.7 Newtons method
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x) ;wishful
+    guess
+    (sqrt-iter (improve guess x) ;thinking
+               x)))
+
+(define (average x y)
+  (/ (+ x y) 2.0))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001)) ; set our equivalence tolerant
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x)) ; start the program with 1 as guess
+;; not perfect
+; (ds (square (sqrt 1000)))
+
+
+
+; 1.2 Procedures and the processes they generate
+
+; a linear recursive process for computing 6!
+(define (factorial n)
+  (if (= 1 n)
+    1
+    (* n (factorial n-1))))
+
+; here's the iterative version, even though it is recursively defined
+(define (factorial n)
+  (fact-iter 1 1 n))
+
+; ah, now we can save a count
+(define (fact-iter product counter max-count)
+  (if (> counter max-count)
+    product
+    (fact-iter (* counter product)
+               (+ counter 1)
+               max-count)))
+
+(ds (= (factorial 3) 6))
+
+; in general, iterative process is one whose state can be 
+; summarized by a fixed number of state variables
+
+; tail recursion will allow us to make recursive iterations in constant space
+
+; ITERATION vs RECURSION
+; iteration a system that has all of its state in explicit variables
+
+(define (-1+ x)
+  (- x 1))
+(define (1+ x)
+  (+ x 1))
+
+; iterative
+(define (sumitr x y)
+  (if (= x 0)
+    y
+    (sumitr (-1+ x) (1+ y))))
+;; this has a time complexity O(x)
+;; this has a space complexity O(1)
+
+; linear recursion 
+(define (sumrec x y)
+  (if (= x 0)
+    y
+    (1+ (+ (-1+ x) y))))
+; this has a time complexity of O(x)
+; but has a space complexity of O(x)
+; proportional to the input argument in time and space
 
 
