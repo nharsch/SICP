@@ -6,6 +6,6 @@
 [vim-clojure-static](https://github.com/guns/vim-clojure-static)
 [fireplace-vim](https://github.com/tpope/vim-fireplace)
 [writing in clojure with vim](http://bridgetconsulting.com/?p=139)
-[pared movements](https://github.com/dgrnbrg/paredit-vim/blob/master/doc/paredit.txt)
+[paredit movements](https://github.com/dgrnbrg/paredit-vim/blob/master/doc/paredit.txt)
 
 
