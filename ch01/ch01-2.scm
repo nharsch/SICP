@@ -77,3 +77,17 @@
                  (fib (- n 2))))))
 
 ; this isnt great, it duplicates work as the tree grows
+
+
+; LECTURE NOTES 1B
+; fibonacci
+; Amount of space taken by recursive algos is
+; the proportional to the length of the longest path
+
+; towers of Hanoi
+(define (move n from to spare)
+  (cond ((= n 0) 'done)
+        (else
+          (move (- n 1) from spare to)
+          (move (- n 1) spare to from))))
+(ds (move 4 'a 'b 'c))

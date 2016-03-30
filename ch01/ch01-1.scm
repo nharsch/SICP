@@ -201,6 +201,12 @@
 
 
 
+; LECTURE NOTES 1B
+; fibonacci
+; Amount of space taken by recursive algos is
+; the proportional to the length of the longest path
+
+; towers of Hanoi
 
 
 
