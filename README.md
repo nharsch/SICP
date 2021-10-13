@@ -1,3 +1,5 @@
+!!Deprecated: moved SICP notes to Obsidian Vault
+
 ## MIT-scheme version
 [For purity sake, there are notes on the original SICP version in MIT-scheme](sicp_mit/)
 
