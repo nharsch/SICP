@@ -119,6 +119,105 @@ Mutable data objects need _mutators_
 
 ### 3.3.2 Representing Queues
 
+Queue is FIFO
+
+Exercise 3.22
+
+```scheme
+
+(define (front-ptr queue) (car queue))
+(define (rear-ptr queue) (cdr queue))
+(define (set-front-ptr! queue item) (set-car! queue item))
+(define (set-rear-ptr! queue item) (set-cdr! queue item))
+(define (empty-queue? queue) (null? (front-ptr queue)))
+
+(define (make-queue) (cons '() '()))
+
+(define (front-queue queue)
+  (if (empty-queue? queue)
+      (error "FRONT called with an empty queue" queue)
+      (car (front-ptr queue))))
+
+(define (insert-queue! queue item)
+  (let ((new-pair (cons item '())))  ; create a new end item
+    (cond ((empty-queue? queue)
+           (set-front-ptr! queue new-pair)  ; put at beginning of empty queue
+           (set-rear-ptr! queue new-pair)  ; put at end of empty queue
+           queue)
+          (else
+           (set-cdr! (rear-ptr queue) new-pair)  ; put at end of non empty queue
+           (set-rear-ptr! queue new-pair)  ; update rear pointer
+           queue))))
+
+(define (delete-queue! queue)
+  (cond ((empty-queue? queue)
+         (error "DELETE! called with an empty queue" queue))
+        (else
+         (set-front-ptr! queue (cdr (front-ptr queue)))  ; remove first item
+         queue)))
+
+(define test-queue (make-queue))
+(empty-queue? test-queue)
+(insert-queue! test-queue 'a)
+(insert-queue! test-queue 'b)
+(insert-queue! test-queue 'c)
+(insert-queue! test-queue 'd)
+(front-ptr test-queue)
+(rear-ptr test-queue)
+(delete-queue! test-queue)
+(print-queue test-queue)
+
+(define (print-queue queue)
+  (display (front-ptr queue)))
+
+(print-queue test-queue)
+
+; make queue with internal methods
+
+(define (make-queue)
+  (let ((front-ptr '())
+        (rear-ptr '()))
+    (define (empty-queue?) (null? front-ptr))
+    (define (set-front-ptr! item) (set! front-ptr item))
+    (define (set-rear-ptr! item) (set! rear-ptr item))
+    (define (front-queue)
+      (if (empty-queue?)
+          (error "FRONT called with an empty queue")
+          (car front-ptr)))
+    (define (insert-queue! item)
+      (let ((new-pair (cons item '())))  ; create a new end item
+        (cond ((empty-queue?)
+               (set-front-ptr! new-pair)  ; put at beginning of empty queue
+               (set-rear-ptr! new-pair))  ; put at end of empty queue
+              (else
+               (set-cdr! rear-ptr new-pair)  ; put at end of non empty queue
+               (set-rear-ptr! new-pair)))))  ; update rear pointer
+    (define (delete-queue!)
+      (cond ((empty-queue?)
+             (error "DELETE called on empty queue"))
+            (else
+             (set-front-ptr! (cdr front-ptr)))))
+    (define (print-queue) front-ptr)
+    (define (dispatch m)
+      (cond ((eq? m 'front) front-ptr)
+            ((eq? m 'rear) rear-ptr)
+            ((eq? m 'insert!) insert-queue!)
+            ((eq? m 'delete!) delete-queue!)
+            ((eq? m 'print) print-queue)
+            ((eq? m 'empty?) empty-queue?)
+            (else (error "undefined operation -- Queue" m))
+            )
+      )
+    dispatch))
+(define q (make-queue))
+(q 'front)
+(q 'rear)
+((q 'insert!) 'a)
+((q 'print))
+((q 'insert!) 'b)
+((q 'insert!) 'c)
+```
+
 ### 3.3.3 Representing Tables
 
 ### 3.3.4 A Simulator for Digital Circuits
