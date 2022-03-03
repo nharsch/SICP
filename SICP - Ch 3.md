@@ -219,6 +219,36 @@ Exercise 3.22
 ```
 
 ### 3.3.3 Representing Tables
+[source](https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.3)
+
+![[SICP figure 3-22.png.png]]
+
+1D table
+
+```scheme
+(define (lookup key table)
+  (let ((record (assoc key (cdr table))))
+    (if record
+        (cdr record)
+        false)))
+(define (assoc key records)
+  (cond ((null? records) false)
+        ((equal? key (caar records)) (car records))
+        (else (assoc key (cdr records)))))
+(define (insert! key value table)
+  (let ((record (assoc key (cdr table))))
+    (if record
+        (set-cdr! record value)
+        (set-cdr! table
+                  (cons (cons key value) (cdr table)))))
+  'ok)
+(define (make-table)
+  (list '*table*))
+
+(define t1 (make-table))
+(insert! 'a 'test t1)
+(lookup 'a t1)
+```
 
 ### 3.3.4 A Simulator for Digital Circuits
 Event-driven simulation
