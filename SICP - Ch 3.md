@@ -223,7 +223,7 @@ Exercise 3.22
 
 ![[SICP figure 3-22.png.png]]
 
-1D table
+1D table represented as a headed list
 
 ```scheme
 (define (lookup key table)
@@ -249,6 +249,37 @@ Exercise 3.22
 (insert! 'a 'test t1)
 (lookup 'a t1)
 ```
+
+2D tables
+
+```scheme
+(define (lookup key-1 key-2 table)
+  (let ((subtable (assoc key-1 (cdr table))))
+    (if subtable
+        (let ((record (assoc key-2 (cdr subtable))))
+          (if record-accessor
+              (cdr record)
+              false))
+        false)))
+
+(define (insert! key-1 key-2 value table)
+  (let ((subtable (assoc key-1 (cdr table))))
+    (if subtable
+        (let ((record (assoc key-2 (cdr subtable))))
+          (if record
+              (set-cdr! record value)
+              (set-cdr! subtable
+                        (cons (cons key-2 value)
+                              (cdr subtable)))))
+        (set-cdr! table
+                  (cons (list key-1
+                              (cons key-2 value))
+                        (cdr table)))))
+  'ok)
+```
+
+**memoization**
+We can store the results of function calls to a table, reducing the compute time on the second execution
 
 ### 3.3.4 A Simulator for Digital Circuits
 Event-driven simulation
