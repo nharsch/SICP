@@ -110,12 +110,53 @@ A procedure is created by evaluating a `lambda` expression relative to a given e
 
 ### 3.2.2 Applying Simple Procedures
 
+**Mutation is just assignment**
+
+```scheme
+(define (fcons x y)
+  (define (set-x! v) (set! x v))
+  (define (set-y! v) (set! y v))
+  (define (dispatch m)
+	(cond ((eq? m 'car) x)
+		  ((eq? m 'cdr) y)
+          ((eq? m 'set-car!) set-x!)
+          ((eq? m 'set-cdr!) set-y!)
+          ;; (else (error "Undefined operation -- CONS" m))
+          ))
+  dispatch)
+(test 'cdr)
+((test 'set-cdr!) 'c)
+(test 'cdr)
+
+; from [[SICP Lectures#Lecture 5B - Computational Objects]]
+(define (cons x y) ; cons is a procedure
+  (lambda (m) ; that takes a procedure as an argument
+	(m x ; and calls it of these 4 values
+	   y
+	   (lambda (n) (set! x n))
+       (lambda (n) (set! y n)))))
+
+(define (car x)
+  (x (lambda (a d sa sd) a))) ; return x
+
+(define (cdr x)
+  (x (lambda (a d sa sd) d))) ; return y
+
+(define (set-car x v)
+ (x (lambda (a d sa sd) (sa v)))) ; call sa on y
+
+(define (set-cdr x v)
+ (x (lambda (a d sa sd) (sd v)))) ; call sd on y
+```
+
 ### 3.2.3 Frames as the Repository of Local State
 
 ## 3.3 Modeling with Mutable Data
 [code_report lectures](https://www.youtube.com/watch?v=jAd4svdYgxY&list=PLVFrD1dmDdvdvWFK8brOVNL7bKHpE-9w0&index=13)
 
 Mutable data objects need _mutators_
+
+### 3.3.1 Mutable List Structure
 
 ### 3.3.2 Representing Queues
 
@@ -278,15 +319,190 @@ Exercise 3.22
   'ok)
 ```
 
-**memoization**
-We can store the results of function calls to a table, reducing the compute time on the second execution
-
 ### 3.3.4 A Simulator for Digital Circuits
 Event-driven simulation
 
 `wire` is stateful component, `signal` can be `set!`
 
 The signal is propograted with certain delays, which are tracked by a schedule
+
+```scheme
+(define (call-each procedures)
+  (if (null? procedures)
+      'done
+      (begin
+        ((car procedures))               ; call procedures
+        (call-each (cdr procedures)))))  ; resursively
+
+(define (make-wire)
+  (let ((signal-value 0) (action-procedures '()))
+    (define (set-my-signal! new-value)
+      (if (not (= signal-value new-value)
+               (begin (set! signal-value new-value)
+                      (call-each action-procedures))
+               'done)))
+
+    (define (accept-action-procedure! proc)
+      (set! action-procedures (cons proc action-procedures))
+      (proc))
+    (define (dispatch m)
+      (cond ((eq? m 'get-signal) signal-value)
+            ((eq? m 'set-signal!) set-my-signal!)
+            ((eq? m 'add-action!) accept-action-procedure!)
+            (else (error "Unknown operation -- WIRE" m))))
+    dispatch))
+
+(define (inverter input output)
+  (define (invert-input)
+    (let ((new-value (logcial-not (get-signal input))))
+      (after-delay inverter-delay
+                   (labmbda ()
+                            (set-signal! output new-value)))))
+  (add-action! input invert-input)
+  'ok)
+(define (logical-not s)
+  (cond ((= s 0) 1)
+        ((= s 1) 0)
+        (else (error "Invalid signal" s))))
+
+(define (and-gate a1 a2 output)
+  (define (and-action-procedure)
+    (let ((new-value
+           (logical-and (get-signal a1) (get-signal a2))))
+      (after-delay and-gate-delay
+                   (lambda ()
+                     (set-singal! output new-value)))))
+  (add-action! a1 and-action-procedure)
+  (add-action! a2 and-action-procedure)
+  'ok)
+(define (logical-and a b)
+    (cond ((and (= a 0) (= b 0)) 0)
+          ((and (= a 1) (= b 0)) 0)
+          ((and (= a 0) (= b 1)) 0)
+          ((and (= a 1) (= b 1)) 1)
+          (else (error "Invalid signal" a b))))
+
+; 3.29 or-gate
+(define (or-gate a1 a2 output)
+  (define (or-action-procedure)
+    (let ((new-value
+           (logical-or (get-signal a1) (get-signal a2))))
+      (after-delay and-gate-delay
+                   (lambda ()
+                     (set-signal! output new-value)))))
+  (add-action! a1 and-action-procedure)
+  (add-action! a2 and-action-procedure)
+  'ok)
+(define (logical-or a b)
+  (cond ((and (= a 0) (= b 0)) 0)
+        ((and (= a 1) (= b 0)) 1)
+        ((and (= a 0) (= b 1)) 1)
+        ((and (= a 1) (= b 1)) 1)
+        (else (error "Invalid signal" a b))))
+
+; 3.29 or-gate using inverter & and gate
+(define (or-gate a1 a2 output)
+  (let ((c1 (make-wire))
+        (c2 (make-wire))
+        (c3 (make-wire)))
+    (inverter a1 c1)
+    (inverter a2 c2)
+    (and-gate c1 c2 c3)
+    (inverter c3 output)))
+
+; making the delay agenda
+(define (after-delay delay action)
+  (add-to-agenda! (+ delay (current-time the-agenda))
+                  action
+                  the-agenda))
+
+(define (propogate)
+  (if (empty-agenda? the-agenda)
+      'done
+      (let ((first-item (first-agenda-item the-agenda)))
+        (first-item) ; call first item
+        (remove-first-agenda-item! the-agenda) ; remove it
+        (propogate)))) ; continue propogation
+
+(define (probe name wire)
+  (add-action! wire
+               (lambda ()
+                 (newline)
+                 (display name)
+                 (display " ")
+                 (display (current-time the-agenda))
+                 (display " New-value = ")
+                 (display (get-signal wire)))))
+```
+
+Keeping track of events with `agenda`
+
+`agenda` schema
+```scheme
+("agenda", ; type declaration
+ ( ; agendas
+			(<time>, queue) ; first agenda
+			((<time>, queue)...) ; rest agendas
+  )
+ )
+```
+
+```scheme
+(define (make-agenda) (list 0))
+(define (curent-time agenda) (car agenda))
+(define (set-current-tiem agenda time)
+  (set-car! agenda time))
+(define (segments agenda) (cdr agenda))
+(define (set-segments! agenda segments)
+  (set-cdr! agenda segments))
+(define (first-segment agenda) (car (segments agenda)))
+(define (rest-segment agenda) (cdr (segments agenda)))
+(define (empty-agena? agenda)
+  (null? (segments agenda)))
+
+(define (add-to-agenda! time action agenda)
+  (define (belongs-before? segments)
+    (or (null? segments)
+        (< time (segment-time (car segments)))))
+  (define (make-new-time-segment time action)
+    (let ((q (make-queue)))
+      (insert-queue! q action)
+      (make-time-segment time q)))
+  (define (add-to-segments! segments)
+    (if (= (segment-time (car segments)) time)
+        (insert-queue! (segment-queue (car segments))
+                       action)
+        (let ((rest (cdr segments)))
+          (if (belongs-before? rest)
+              (set-cdr!
+               segments
+               (cons (make-new-time-segment time action)
+                     (cdr segments)))
+              (add-to-segments! rest)))))
+  (let ((segments (segments agenda)))
+    (if (belongs-before? segments)
+        (set-segments!
+         agenda
+         (cons (make-new-teime-segment time action)
+               segments))
+        (add-to-segments! segments))))
+(define (remove-first-agenda-item! agenda)
+  (let ((q (segment-queue (first-segment agenda))))
+    (delete-queue! q)
+    (if (empty-queue! q)
+        (set-segments! agenda (rest-segments agenda)))))
+(define (first-agenda-item agenda)
+  (if (empty-agenda? agenda)
+      (error "Agenda is empty -- FIRST-AGENDA-ITEM")
+      (let ((first-seg (first-segment agenda)))
+        (set-current-time! agenda (segment-time first-seq))
+        (front-queue (segment-queue first-seg)))))
+```
+
+
+
+**memoization**
+We can store the results of function calls to a table, reducing the compute time on the second execution
 
 ### 3.3.5 Propogration of Constraints
 [book link](https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.5)

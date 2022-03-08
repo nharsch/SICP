@@ -96,13 +96,17 @@ Covers [[SICP - Ch 3#3 1]],  [[SICP - Ch 3#3 2]]
 		- of both change, they aren't objects OR are the same object
 
 ## Lecture 5B - Computational Objects
+[source](https://www.youtube.com/watch?v=yedzRWhi-9E&list=PLE18841CABEA24090&index=10)
+
+Electrical systems: physicists' best objects
+
 Inverter - returns opposite of input
 
 wire - message accepting object
     - stateful object
 	- set-my-signal: changes signal state
 	- accepts action procedures
+		- inform output connections
 	- dispatch: 
 	
-queues
 [[Queues]]
