@@ -696,6 +696,7 @@ similar concept as the digital logic work
 ```
 
 ## 3.4 Concurrency
+[book link](https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html)
 
 Assignments introduce time to our computational model
 
@@ -733,7 +734,6 @@ Serialized procedures will execute concurrently, but there will be certain colle
 ```
 
 TODO: left off at "Complexity of using multiple shared resources"
-
 
 
 ## Lectures
