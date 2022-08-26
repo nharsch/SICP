@@ -1,5 +1,6 @@
 ## 3.1
 [code report video](https://www.youtube.com/watch?v=9cOsXQ-7SwE&t=411s)
+[online SICP](https://sarabander.github.io/sicp/html/3_002e4.xhtml#g_t3_002e4)
 
 ### 3.1.1
 
