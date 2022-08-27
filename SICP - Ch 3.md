@@ -710,8 +710,10 @@ Serialized procedures will execute concurrently, but there will be certain colle
 
 (define x 10)
 
+;; create serializer s
 (define s (make-serializer))
 
+;; call certain procedures in the serializer
 (parallel-execute (s (lambda () (set! x (* x x))))
                   (s (lambda () (set! x (+ x 1)))))
 
@@ -734,7 +736,39 @@ Serialized procedures will execute concurrently, but there will be certain colle
   dispatch)
 ```
 
-TODO: left off at "Complexity of using multiple shared resources"
+### Implementing Serializers
+
+Implemented with a _[[mutex]]_, an object that supports two operations, _acquire_ and _release_
+
+```scheme
+(define (make-serializer)
+  (let ((mutex (make-mutex)))
+    (lambda (p)
+      (define (serialized-p . args)
+        (mutex 'acquire)
+        (let ((val (apply p args)))
+          (mutext 'release)
+          val))
+      serialized-p)))
+```
+
+Implement _mutex_ with a single item list (a _cell_) that is either True of False. If True, it cannot be acquired, if False, it can be.
+
+```scheme
+(define (make-mutext)
+  (let ((cell (list false)))
+    (define (the-mutex m)
+      (cond ((eq? m 'acquire)
+             (if (test-and-set! cell)
+                 (the-mutext 'acquire)))
+            ((eq? m 'release) (celar! cell))))
+    the-mutex))
+(define (clear! cell) (set-car! cell false))
+
+```
+
+## Recap
+This chapter took me forever and made me hate assignment. I can't say that I really understand the `make-serializer` bit. I'll need to return to this later, but want to move on for now.
 
 
 ## Lectures
