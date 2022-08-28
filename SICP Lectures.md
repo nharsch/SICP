@@ -109,6 +109,19 @@ wire - message accepting object
 		- inform output connections
 	- dispatch: 
 	
-[[Queues]]
+[[Queue]]s
 
 ## Lecture 6A - Streams
+To avoid the mess we see with mutable state, what if we rethink how we model the problem
+What if we modelled problems more like [[Signal Processing]] where each node in a network transforms an input signal into an output signal
+
+We'll use _streams_ as a data structure to carry signals
+
+```scheme
+(cons-stream x y)
+(head s)
+(tail s)
+(map-stream)
+```
+
+Stream processing establishes _conventional interfaces_ that allow us to glue things together, like `map` and `filter` and `accumulate`. This allows us to see the commonality between programs
