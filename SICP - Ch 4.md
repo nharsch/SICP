@@ -3,6 +3,8 @@
 
 [Lecture Video](https://www.youtube.com/watch?v=rCqMiPk1BJE&list=PLE18841CABEA24090&index=15)
 
+Computer programming is only incedentally about getting computers to do something
+
 *unification* - [[Unification Algorithm]] and the [[Resolution Principle]]
 
 Because we have a gneral purpose idea of `eval` and `apply`, we can create another kind of language.
