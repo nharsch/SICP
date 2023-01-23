@@ -1,9 +1,12 @@
 [[Chimera]] quote in intro
 
 ## Intro
-_Metalinguistic abstraction:_ establishing new languages. Formulate new languages and implement them by constructing evaluators. 
+_Metalinguistic abstraction:_ establishing new languages. Formulate new languages and implement them by constructing evaluators.
 
 Most fundemental idea in programming: The evaulator, which determines the meaning of expressions in a programming language, is just another program.
+Computer programming is only incedentally about getting computers to do something
+
+*unification* - [[Unification Algorithm]] and the [[Resolution Principle]]
 
 Applicative order vs _normal-order evaluation_
 
