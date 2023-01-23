@@ -1,55 +1,62 @@
+[[Chimera]] quote in intro
+
+## Intro
+_Metalinguistic abstraction:_ establishing new languages. Formulate new languages and implement them by constructing evaluators. 
+
+Most fundemental idea in programming: The evaulator, which determines the meaning of expressions in a programming language, is just another program.
+
+Applicative order vs _normal-order evaluation_
+
+## 4.1 The Metacircular Evaluator
+An evaluator that is written the the same language that it evaluates is said to be _metacircular_
+
+### **Eval** 
+**Eval** takes as arguments an expression and an environment. 
+
+Each type of expression has a predicate that tests for it and an abstract means for selecting its parts. **Abstract Syntax**
+
+#### Primitive expressions
+- for self-evaluating expressions, such as numbers, eval returns the expression itself
+- `Eval` looks up variables in the environment
+
+#### Special Forms
+- quoted expressions, assignments, conditionals, lambdas, `begin`
+
+#### Combinations
+
+### Apply
+`Apply` takes a procedure and a list of args. Compound arguments are padded to `Eval`
+
+### 4.1.2 Representing Expressions
+
+### 4.1.3 Evaluator Data Structures
+
+### 4.1.4 Running the Evaluator as a Program
+
+### 4.1.5 Data as Programs
+We can think of programs as data structures defining a machine
+
+We can think of evaluators as machines that read in descriptions of machines and reconfigure themselves to become the machine the program describes. Thus an evaluator is a _universal machine_
+
+### 4.1.6 Internal Definitions
+
+## 4.2 Lazy Evaluation
+
+### 4.2.1 Normal Order and Applicative Order
+Applicative Order: all args to a procedure are evaluated when procedure is applied
+Normal Order: delay evaluation of procedure arguments until the actual argument values are needed. AKA [[Lazy Evaluation]]
+
+### 4.2.3 Streams as Lazy Lists
+Re impliment streams as defined in [[SICP - Ch 3]] as _Lazy Lists_
+
+
 ## 4.4 [[Logic Programming]]
 [Book](https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-29.html#%_sec_4.4)
+### Lecture
+- [[SICP Lectures#Lecture 8A - Logic Programming]]
 
-[Lecture Video](https://www.youtube.com/watch?v=rCqMiPk1BJE&list=PLE18841CABEA24090&index=15)
-
-*unification* - [[Unification Algorithm]] and the [[Resolution Principle]]
-
-Because we have a gneral purpose idea of `eval` and `apply`, we can create another kind of language.
-
-Most of computer science is "how to" knowledge, where math is "declarative". 
-
-What if we could write programs by "specifying facts".
-
-Given these facts:
-
-```
-SON-OF adam abel
-SON-OF adam cain
-```
-
-Can we answer "who is cain the son-of" or "who are the sons of cain" or "what is the relationship between cain and abel"
-
-We could define `GRANDSON-OF` thus:
-```
-IF (SON-OF ?x ?y) AND (SON-OF ?y ?z)
-THEN
-GRANDSON-OF ?x ?z
-```
-
-Procedural programming has inputs and outputs. Rules talk about *relations*
-
-We can define a `merge` function that takes two lists as arguments such that 
-
-```scheme
-(= (merge '(1 2 3) '(4 5)) '(1 2 3 4 5))
-```
-
-But in a logic program, we could assert:
-```
-'(1 2 3) AND '(4 5) MERGE-TO-FORM '(1 2 3 4 5)
-```
-
-We could also ask what lists can merge to form the answer:
-```
-?x and ?y MERGE-TO-FORM '(1 2 3 4 5 6)
-```
-
-Relations don't have directionality
-
-Use logic to *express* what is true, use logic to *check* what is true, use logic to *find out* what is true
-
-We'll build a logic system that is similar to [Prolog]
+### Intro
+The logic programming language we're implementing is also a _query language_ because it is very useful for retrieving information from databases
 
 ### 4.4.1 Deductive Information Retrieval
 For a given language, always ask:
@@ -115,7 +122,7 @@ We can use queries a bit like procedures
 ```
 
 ### 4.4.2 How the Query System Works
-[Lecture Video](https://www.youtube.com/watch?v=GReBwkGFZcs&list=PLE18841CABEA24090&index=16)
+# TODO: left off heer
 
 Searching with streams
 

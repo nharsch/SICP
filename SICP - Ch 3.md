@@ -771,6 +771,8 @@ Implement _mutex_ with a single item list (a _cell_) that is either True of Fals
 This chapter took me forever and made me hate assignment. I can't say that I really understand the `make-serializer` bit. I'll need to return to this later, but want to move on for now.
 
 ## 3.5 Streams
+https://sarabander.github.io/sicp/html/3_002e5.xhtml
+
 
 ## Lectures
 ![[SICP Lectures#Lecture 5A - Assignment State and Side-Effects]]

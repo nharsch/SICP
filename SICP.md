@@ -3,7 +3,7 @@ aliases: [Structure and Interpretation of Computer Programs]
 ---
 - [[GTD Project - SICP]]
 
-#book by [[Hal Abelson]] and [[Gerald Jay Sussman]]. Teaches programming fundementals using [[Scheme]]. Works up from basic arithmetic operations to [[Register Machines]]
+#book by [[Hal Abelson]] and [[Gerald Sussman]]. Teaches programming fundementals using [[Scheme]]. Works up from basic arithmetic operations to [[Register Machines]]
 
 ## Resources
 - [Online Version](https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-4.html#%_toc_start)
