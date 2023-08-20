@@ -125,7 +125,7 @@ We can use queries a bit like procedures
 ```
 
 ### 4.4.2 How the Query System Works
-# TODO: left off heer
+# TODO: left off here
 
 Searching with streams
 
